@@ -3,6 +3,7 @@ module github.com/Gabriel-Jeronimo/eth-keygen-api
 go 1.21.3
 
 require (
+	github.com/aws/aws-lambda-go v1.41.0
 	github.com/btcsuite/btcd/btcec/v2 v2.2.0 // indirect
 	github.com/decred/dcrd/dcrec/secp256k1/v4 v4.0.1 // indirect
 	github.com/ethereum/go-ethereum v1.13.4
