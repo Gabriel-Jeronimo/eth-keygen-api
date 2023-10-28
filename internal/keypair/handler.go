@@ -11,6 +11,8 @@ func InitRoutes() {
 	http.HandleFunc("/address", GetAddressHandler)
 }
 
+// TODO: Handle errors and remove this log.Fatal
+// TODO: Create the return structure
 func GenerateKeypairHandler(w http.ResponseWriter, r *http.Request) {
 	privateKey, publicKey, err := GenerateKeypair()
 
@@ -22,7 +24,7 @@ func GenerateKeypairHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func GetAddressHandler(w http.ResponseWriter, r *http.Request) {
-	address, err := GetAddress()
+	address, err := GetAddress("")
 
 	if err != nil {
 		log.Fatal(err)
