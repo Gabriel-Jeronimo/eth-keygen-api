@@ -13,8 +13,8 @@ func TestHandler(t *testing.T) {
 		Records: []events.SQSMessage{
 			{
 				Body: `{
-					"to": "0xAbC123...",
-					"value": "0x1bc16d674ec80000",
+					"to": "0xAbC123aaa",
+					"value": "0x1bc16d674ec80000"
 					}`,
 			},
 		},

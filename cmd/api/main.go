@@ -7,11 +7,18 @@ import (
 	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/keypair"
 	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/lambda"
 	aws "github.com/aws/aws-lambda-go/lambda"
+	"github.com/joho/godotenv"
 )
 
 func main() {
 	keypair.InitRoutes()
 
 	aws.Start(lambda.Handler)
+	err := godotenv.Load(".env")
+
+	if err != nil {
+		log.Fatal("Failed loading environment file")
+	}
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
