@@ -42,8 +42,23 @@ func Handler(ctx context.Context, event events.SQSEvent) error {
 			return err
 		}
 
-		eth.SignAndPushTransaction(ethClient, address, transaction.To, transaction.Value, privateKeyString)
+		faucetTx, err := eth.FaucetToAddress(ethClient, transaction.Value, address)
 
+		if err != nil {
+			return err
+		}
+
+		eth.WaitTx(ethClient, faucetTx)
+
+		tx, err := eth.SignAndPushTransaction(ethClient, address, transaction.To, transaction.Value, privateKeyString)
+
+		if err != nil {
+			return err
+		}
+
+		fmt.Printf("Transaction confirmed: %s\n", tx)
 	}
 	return nil
 }
+
+

@@ -4,8 +4,11 @@ import (
 	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
+	"fmt"
 	"log"
 	"math/big"
+	"os"
+	"time"
 
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
@@ -14,12 +17,12 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
-func Connect() (*ethclient.Client, error) {
-	// infuraProjectId := os.Getenv("INFURA_PROJECT_ID")
-	// InfuraSecretApi := os.Getenv("INFURA_SECRET_API")
+var gasLimit = uint64(21000)
+var gasPrice = big.NewInt(10 * params.GWei)
 
-	infuraProjectID := "c510981aace04b1e80506a0ff746b7d2"
-	infuraURL := "https://sepolia.infura.io/v3/" + infuraProjectID
+func Connect() (*ethclient.Client, error) {
+	infuraProjectId := os.Getenv("INFURA_PROJECT_ID")
+	infuraURL := "https://sepolia.infura.io/v3/" + infuraProjectId
 
 	ethClient, err := ethclient.Dial(infuraURL)
 
@@ -32,12 +35,8 @@ func Connect() (*ethclient.Client, error) {
 }
 
 func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string, value string, privateKeyString string) (string, error) {
-	toAddress := common.HexToAddress(to)
 	amount := new(big.Int)
 	amount.SetString(value[2:], 16)
-
-	gasLimit := uint64(21000)
-	gasPrice := big.NewInt(10 * params.GWei)
 
 	nonce, err := getNounce(ethClient, from)
 
@@ -45,7 +44,7 @@ func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string,
 		return "", err
 	}
 
-	tx := types.NewTransaction(nonce, toAddress, amount, gasLimit, gasPrice, nil)
+	tx := types.NewTransaction(nonce, common.HexToAddress(to), amount, gasLimit, gasPrice, nil)
 
 	privateKey, err := stringToPrivateKey(privateKeyString)
 
@@ -67,9 +66,59 @@ func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string,
 		return "", err
 	}
 
-	hash := signedTx.Hash().Hex()
+	return signedTx.Hash().Hex(), nil
+}
+
+func WaitTx(ethClient *ethclient.Client, tx string) {
+	for {
+		_, pending, err := ethClient.TransactionByHash(context.Background(), common.HexToHash(tx))
+
+		if err != nil {
+			log.Printf("failed to wait for transaction: %v", err)
+			return
+		}
+
+		if !pending {
+			break
+		}
+
+		time.Sleep(5 * time.Second)
+	}
+}
+
+func FaucetToAddress(ethClient *ethclient.Client, value string, to string) (string, error) {
+	foundingPrivateKey := os.Getenv("FOUNDING_PRIVATE_KEY")
+	foundingAddress := os.Getenv("FOUDING_ADDRESS")
+
+	amount, err := calculateTransactionCost(gasLimit, gasPrice, value)
+
+	if err != nil {
+		return "", nil
+	}
+
+	hash, err := SignAndPushTransaction(ethClient, foundingAddress, to, amount, foundingPrivateKey)
+
+	if err != nil {
+		return "", nil
+	}
 
 	return hash, nil
+}
+
+func calculateTransactionCost(gasLimit uint64, gasPrice *big.Int, transactionValueHex string) (string, error) {
+	transactionValue, success := new(big.Int).SetString(transactionValueHex, 0)
+
+	if !success {
+		return "", fmt.Errorf("failed to parse transaction value hex")
+	}
+
+	gasCost := new(big.Int).SetUint64(gasLimit)
+	gasCost.Mul(gasCost, gasPrice)
+	totalCost := new(big.Int).Set(transactionValue)
+	totalCost.Add(totalCost, gasCost)
+
+	totalCostHex := fmt.Sprintf("0x%X", totalCost)
+	return totalCostHex, nil
 }
 
 func getNounce(ethClient *ethclient.Client, from string) (uint64, error) {
@@ -86,13 +135,13 @@ func getNounce(ethClient *ethclient.Client, from string) (uint64, error) {
 func stringToPrivateKey(privateKeyString string) (*ecdsa.PrivateKey, error) {
 	privateKeyBytes, err := hex.DecodeString(privateKeyString)
 	if err != nil {
-		log.Fatalf("Failed to decode private key: %v", err)
+		log.Printf("Failed to decode private key: %v", err)
 		return nil, err
 	}
 
 	privateKey, err := crypto.ToECDSA(privateKeyBytes)
 	if err != nil {
-		log.Fatalf("Failed to convert private key to ECDSA Private Key: %v", err)
+		log.Printf("Failed to convert private key to ECDSA Private Key: %v", err)
 		return nil, err
 	}
 
