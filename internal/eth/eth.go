@@ -71,6 +71,8 @@ func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string,
 
 func WaitTx(ethClient *ethclient.Client, tx string) {
 	for {
+		time.Sleep(10 * time.Second)
+
 		_, pending, err := ethClient.TransactionByHash(context.Background(), common.HexToHash(tx))
 
 		if err != nil {
@@ -82,7 +84,6 @@ func WaitTx(ethClient *ethclient.Client, tx string) {
 			break
 		}
 
-		time.Sleep(5 * time.Second)
 	}
 }
 

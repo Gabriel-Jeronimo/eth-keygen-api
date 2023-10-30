@@ -20,7 +20,7 @@ func TestHandler(t *testing.T) {
 		},
 	}
 
-	err := lambda.Handler(context.Background(), request)
+	_, err := lambda.Handler(context.Background(), request)
 
 	if err != nil {
 		t.Fatalf("Handler failed")
