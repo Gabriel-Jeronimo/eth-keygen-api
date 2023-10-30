@@ -10,11 +10,11 @@ Resources:
       CodeUri: ./cmd/api/
       Environment:
         Variables:
-          INFURA_PROJECT_ID: "YOUR VARIABLE HERE"
-          FOUNDING_PRIVATE_KEY: "YOUR VARIABLE HERE"
-          FOUDING_ADDRESS: "YOUR VARIABLE HERE"
-          QUEUE_URL: "YOUR VARIABLE HERE"
-
+          INFURA_PROJECT_ID: "c510981aace04b1e80506a0ff746b7d2"
+          FOUNDING_PRIVATE_KEY: "4a0e1827d9c9c5c10073a5f206272f9dcfb210e4564e227a511d65625a22fde5"
+          FOUDING_ADDRESS: "0x1a48d9Df82436122E90583655873a481EA446a0D"
+          QUEUE_URL: "https://sqs.us-west-2.amazonaws.com/029646376518/KeygenQueue"
+          AWS_REGION: "us-west-2"
       Handler: main
       MemorySize: 128
       Timeout: 30
@@ -93,19 +93,24 @@ Resources:
         info:
           title: "eth-keygen-api"
         paths:
-          /send-message: # The path for sending messages to SQS
+          /sign:
             post:
               x-amazon-apigateway-integration:
                 type: "AWS"
-                integrationHttpMethod: "POST"
-                uri:
-                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:sqs:path/KeygenQueue # Replace "KeygenQueue" with your SQS queue name
-                requestTemplates:
-                  application/json: |
-                    # You can customize the request template if needed
-                    {
-                      "MessageBody": $input.json('$')
-                    }
+                httpMethod: "POST"
+                uri: !Sub arn:aws:apigateway:${AWS::Region}:sqs:path/KeygenQueue
+                passthroughBehavior: "NEVER"
+                contentHandling: "CONVERT_TO_TEXT"
+                responses:
+                  "200":
+                    description: "200 response"
+                    statusCode: 200
+                    content:
+                      application/json:
+                        schema:
+                          $ref: "#/schemas/Empty"
+                credentials:
+                  Fn::GetAtt: [LambdaExecutionRole, Arn]
 
 Outputs:
   MyLambdaFunctionArn:

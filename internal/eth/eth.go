@@ -38,7 +38,7 @@ func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string,
 	amount := new(big.Int)
 	amount.SetString(value[2:], 16)
 
-	nonce, err := getNounce(ethClient, from)
+	nonce, err := GetNounce(ethClient, from)
 
 	if err != nil {
 		return "", err
@@ -46,7 +46,7 @@ func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string,
 
 	tx := types.NewTransaction(nonce, common.HexToAddress(to), amount, gasLimit, gasPrice, nil)
 
-	privateKey, err := stringToPrivateKey(privateKeyString)
+	privateKey, err := StringToPrivateKey(privateKeyString)
 
 	if err != nil {
 		return "", err
@@ -76,7 +76,7 @@ func WaitTx(ethClient *ethclient.Client, tx string) {
 		_, pending, err := ethClient.TransactionByHash(context.Background(), common.HexToHash(tx))
 
 		if err != nil {
-			log.Printf("failed to wait for transaction: %v", err)
+			log.Printf("ERROR: failed to wait for transaction: %v", err)
 			return
 		}
 
@@ -91,7 +91,7 @@ func FaucetToAddress(ethClient *ethclient.Client, value string, to string) (stri
 	foundingPrivateKey := os.Getenv("FOUNDING_PRIVATE_KEY")
 	foundingAddress := os.Getenv("FOUDING_ADDRESS")
 
-	amount, err := calculateTransactionCost(gasLimit, gasPrice, value)
+	amount, err := CalculateTransactionCost(gasLimit, gasPrice, value)
 
 	if err != nil {
 		return "", nil
@@ -106,7 +106,7 @@ func FaucetToAddress(ethClient *ethclient.Client, value string, to string) (stri
 	return hash, nil
 }
 
-func calculateTransactionCost(gasLimit uint64, gasPrice *big.Int, transactionValueHex string) (string, error) {
+func CalculateTransactionCost(gasLimit uint64, gasPrice *big.Int, transactionValueHex string) (string, error) {
 	transactionValue, success := new(big.Int).SetString(transactionValueHex, 0)
 
 	if !success {
@@ -122,7 +122,7 @@ func calculateTransactionCost(gasLimit uint64, gasPrice *big.Int, transactionVal
 	return totalCostHex, nil
 }
 
-func getNounce(ethClient *ethclient.Client, from string) (uint64, error) {
+func GetNounce(ethClient *ethclient.Client, from string) (uint64, error) {
 	nonce, err := ethClient.PendingNonceAt(context.Background(), common.HexToAddress(from))
 
 	if err != nil {
@@ -133,16 +133,16 @@ func getNounce(ethClient *ethclient.Client, from string) (uint64, error) {
 	return nonce, nil
 }
 
-func stringToPrivateKey(privateKeyString string) (*ecdsa.PrivateKey, error) {
+func StringToPrivateKey(privateKeyString string) (*ecdsa.PrivateKey, error) {
 	privateKeyBytes, err := hex.DecodeString(privateKeyString)
 	if err != nil {
-		log.Printf("Failed to decode private key: %v", err)
+		log.Printf("ERROR: Failed to decode private key: %v", err)
 		return nil, err
 	}
 
 	privateKey, err := crypto.ToECDSA(privateKeyBytes)
 	if err != nil {
-		log.Printf("Failed to convert private key to ECDSA Private Key: %v", err)
+		log.Printf("ERROR: Failed to convert private key to ECDSA Private Key: %v", err)
 		return nil, err
 	}
 
