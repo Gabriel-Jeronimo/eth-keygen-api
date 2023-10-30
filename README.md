@@ -7,7 +7,7 @@ Este é um projeto Go que fornece uma API para gerar chaves Ethereum. Ele inclui
 1. Clone o repositório do projeto:
 
 ```bash
-git clone https://github.com/seu-usuario/eth-keygen-api.git
+git clone https://github.com/Gabriel-Jeronimo/eth-keygen-api.git
 ```
 
 ```bash
