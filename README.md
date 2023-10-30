@@ -14,7 +14,7 @@ git clone https://github.com/seu-usuario/eth-keygen-api.git
 cd eth-keygen-api
 ```
 
-2. Insira suas variáveis no template.example.yaml
+2. Insira suas variáveis no template.yaml
 
 3. Execute o deploy com o SAM:
 
