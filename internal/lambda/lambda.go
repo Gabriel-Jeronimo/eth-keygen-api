@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/eth"
 	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/keypair"
@@ -30,13 +31,14 @@ type Response struct {
 func Handler(ctx context.Context, event events.SQSEvent) (Response, error) {
 	var transaction Transaction
 
+	queueURL := os.Getenv("QUEUE_URL")
+	awsRegion := os.Getenv("AWS_REGION")
+
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region: aws.String("us-west-2"),
+		Region: aws.String(awsRegion),
 	}))
 
 	sqsClient := sqs.New(sess)
-
-	queueURL := "https://sqs.us-west-2.amazonaws.com/029646376518/KeygenQueue"
 
 	for _, record := range event.Records {
 		fmt.Printf("Processing message: %v", record.Body)
