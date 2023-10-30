@@ -13,6 +13,8 @@ Resources:
           INFURA_PROJECT_ID: "YOUR VARIABLE HERE"
           FOUNDING_PRIVATE_KEY: "YOUR VARIABLE HERE"
           FOUDING_ADDRESS: "YOUR VARIABLE HERE"
+          QUEUE_URL: "YOUR VARIABLE HERE"
+
       Handler: main
       MemorySize: 128
       Timeout: 30
@@ -91,13 +93,13 @@ Resources:
         info:
           title: "eth-keygen-api"
         paths:
-          /send-message:   # The path for sending messages to SQS
+          /send-message: # The path for sending messages to SQS
             post:
               x-amazon-apigateway-integration:
                 type: "AWS"
                 integrationHttpMethod: "POST"
                 uri:
-                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:sqs:path/KeygenQueue   # Replace "KeygenQueue" with your SQS queue name
+                  Fn::Sub: arn:aws:apigateway:${AWS::Region}:sqs:path/KeygenQueue # Replace "KeygenQueue" with your SQS queue name
                 requestTemplates:
                   application/json: |
                     # You can customize the request template if needed
