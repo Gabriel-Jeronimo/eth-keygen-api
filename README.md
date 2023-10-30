@@ -2,6 +2,7 @@
 
 Este é um projeto Go que fornece uma API para gerar chaves Ethereum. Ele inclui um Dockerfile para fácil implantação em containers.
 
+Você pode encontrar uma implementação desse serviço com AWS na branch feat/aws
 ## Como Executar
 
 1. Clone o repositório do projeto:
