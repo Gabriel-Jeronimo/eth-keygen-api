@@ -19,6 +19,7 @@ cd eth-keygen-api
 3. Execute o deploy com o SAM:
 
 ```bash
+sam deploy --guided
 sam build && sam deploy --capabilities CAPABILITY_NAMED_IAM
 ```
 
