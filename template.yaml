@@ -10,11 +10,10 @@ Resources:
       CodeUri: ./cmd/api/
       Environment:
         Variables:
-          INFURA_PROJECT_ID: "c510981aace04b1e80506a0ff746b7d2"
-          FOUNDING_PRIVATE_KEY: "4a0e1827d9c9c5c10073a5f206272f9dcfb210e4564e227a511d65625a22fde5"
-          FOUDING_ADDRESS: "0x1a48d9Df82436122E90583655873a481EA446a0D"
-          QUEUE_URL: "https://sqs.us-west-2.amazonaws.com/029646376518/KeygenQueue"
-          AWS_REGION: "us-west-2"
+          INFURA_PROJECT_ID: "YOUR VARIABLE HERE"
+          FOUNDING_PRIVATE_KEY: "YOUR VARIABLE HERE"
+          FOUDING_ADDRESS: "YOUR VARIABLE HERE"
+          QUEUE_URL: "YOUR VARIABLE HERE"
       Handler: main
       MemorySize: 128
       Timeout: 30
