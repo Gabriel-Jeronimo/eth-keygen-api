@@ -23,6 +23,6 @@ sam deploy --guided
 sam build && sam deploy --capabilities CAPABILITY_NAMED_IAM
 ```
 
-Agora, a API estará disponível na AWS.
+Pronto, a API estará disponível na AWS.
 
 ![Foto da arquitetura](https://github.com/Gabriel-Jeronimo/eth-keygen-api/assets/55462130/351cb4b8-47bb-4444-b2d3-a6b52001b20b)
