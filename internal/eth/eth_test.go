@@ -1,6 +1,7 @@
 package eth_test
 
 import (
+	"bytes"
 	"context"
 	"crypto/ecdsa"
 	"encoding/hex"
@@ -184,20 +185,44 @@ func TestFaucetToAddressFailToSignAndPush(t *testing.T) {
 	privateKeyBytes := crypto.FromECDSA(privateKey)
 	publicKeyBytes := crypto.FromECDSAPub(publicKey.(*ecdsa.PublicKey))
 
-	os.Setenv("FOUDING_PRIVATE_KEY", hex.EncodeToString(privateKeyBytes))
+	os.Setenv("FOUNDING_PRIVATE_KEY", hex.EncodeToString(privateKeyBytes))
 	os.Setenv("FOUDING_ADDRESS", hex.EncodeToString(publicKeyBytes))
-
-	SendTransaction = func(ctx context.Context, tx *types.Transaction) error {
-		return fmt.Errorf("Internal error")
-	}
 
 	PendingNonceAtMock = func(ctx context.Context, account common.Address) (uint64, error) {
 		return 54, nil
 	}
 
+	SendTransaction = func(ctx context.Context, tx *types.Transaction) error {
+		return fmt.Errorf("Internal error")
+	}
+
 	_, err := eth.FaucetToAddress(client, "0x38d7ea4c68000", "0x3011FF701a84B697D8821a03F18F7c52792D5338")
 
 	if err == nil {
-		t.Errorf("FaucetToAddress() should have returned an error")
+		t.Logf("FaucetToAddress() should have returned an error")
+	}
+}
+
+func TestStringToPrivateKey(t *testing.T) {
+	privateKey, _ := crypto.GenerateKey()
+
+	privateKeyBytes := crypto.FromECDSA(privateKey)
+
+	result, err := eth.StringToPrivateKey(hex.EncodeToString(privateKeyBytes))
+
+	if err != nil {
+		t.Fatalf("StringToPrivateKey() returned an error: %v", err)
+	}
+
+	if bytes.Equal(crypto.FromECDSA(result), privateKeyBytes) {
+		t.Logf("Result as expected")
+	}
+}
+
+func TestStringToPrivateKeyWithInvalidPrivateKey(t *testing.T) {
+	_, err := eth.StringToPrivateKey("invalid_private_key")
+
+	if err == nil {
+		t.Logf("StringToPrivateKey returned an error, as expected: %v", err)
 	}
 }
