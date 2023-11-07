@@ -17,6 +17,12 @@ import (
 	"github.com/ethereum/go-ethereum/params"
 )
 
+type Client interface {
+	TransactionByHash(ctx context.Context, hash common.Hash) (tx *types.Transaction, isPending bool, err error)
+	PendingNonceAt(ctx context.Context, account common.Address) (uint64, error)
+	SendTransaction(ctx context.Context, tx *types.Transaction) error
+}
+
 var gasLimit = uint64(21000)
 var gasPrice = big.NewInt(10 * params.GWei)
 
@@ -34,7 +40,7 @@ func Connect() (*ethclient.Client, error) {
 	return ethClient, nil
 }
 
-func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string, value string, privateKeyString string) (string, error) {
+func SignAndPushTransaction(ethClient Client, from string, to string, value string, privateKeyString string) (string, error) {
 	amount := new(big.Int)
 	amount.SetString(value[2:], 16)
 
@@ -69,7 +75,7 @@ func SignAndPushTransaction(ethClient *ethclient.Client, from string, to string,
 	return signedTx.Hash().Hex(), nil
 }
 
-func WaitTx(ethClient *ethclient.Client, tx string) {
+func WaitTx(ethClient Client, tx string) error {
 	for {
 		time.Sleep(10 * time.Second)
 
@@ -77,17 +83,18 @@ func WaitTx(ethClient *ethclient.Client, tx string) {
 
 		if err != nil {
 			log.Printf("ERROR: failed to wait for transaction: %v", err)
-			return
+			return err
 		}
 
 		if !pending {
 			break
 		}
-
 	}
+
+	return nil
 }
 
-func FaucetToAddress(ethClient *ethclient.Client, value string, to string) (string, error) {
+func FaucetToAddress(ethClient Client, value string, to string) (string, error) {
 	foundingPrivateKey := os.Getenv("FOUNDING_PRIVATE_KEY")
 	foundingAddress := os.Getenv("FOUDING_ADDRESS")
 
@@ -122,7 +129,7 @@ func CalculateTransactionCost(gasLimit uint64, gasPrice *big.Int, transactionVal
 	return totalCostHex, nil
 }
 
-func GetNounce(ethClient *ethclient.Client, from string) (uint64, error) {
+func GetNounce(ethClient Client, from string) (uint64, error) {
 	nonce, err := ethClient.PendingNonceAt(context.Background(), common.HexToAddress(from))
 
 	if err != nil {
