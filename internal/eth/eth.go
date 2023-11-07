@@ -98,6 +98,7 @@ func FaucetToAddress(ethClient Client, value string, to string) (string, error) 
 	foundingPrivateKey := os.Getenv("FOUNDING_PRIVATE_KEY")
 	foundingAddress := os.Getenv("FOUDING_ADDRESS")
 
+	fmt.Printf("%s", foundingPrivateKey)
 	amount, err := CalculateTransactionCost(gasLimit, gasPrice, value)
 
 	if err != nil {
