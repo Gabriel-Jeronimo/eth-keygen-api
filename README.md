@@ -1,5 +1,3 @@
-Sure, here's the translation:
-
 # eth-keygen-api
 
 This is a Go project that provides an API for generating Ethereum keys. It includes a Dockerfile for easy deployment in containers.
