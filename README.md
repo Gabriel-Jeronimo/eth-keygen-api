@@ -14,13 +14,16 @@ git clone https://github.com/Gabriel-Jeronimo/eth-keygen-api.git
 cd eth-keygen-api
 ```
 
-2. Insira suas variáveis no template.yaml
-
-3. Execute o deploy com o SAM:
+2. Faça o download das dependências do Terraform
 
 ```bash
-sam deploy --guided
-sam build && sam deploy --capabilities CAPABILITY_NAMED_IAM
+make init
+```
+
+3. Execute o deploy com o Terraform
+
+```bash
+make apply
 ```
 
 Pronto, a API estará disponível na AWS.
