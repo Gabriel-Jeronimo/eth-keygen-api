@@ -7,8 +7,8 @@ import (
 	"log"
 	"os"
 
-	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/eth"
-	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/keypair"
+	"github.com/Gabriel-Jeronimo/eth-keygen-api/src/internal/eth"
+	"github.com/Gabriel-Jeronimo/eth-keygen-api/src/internal/keypair"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

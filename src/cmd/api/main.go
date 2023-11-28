@@ -4,8 +4,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/keypair"
-	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/lambda"
+	"github.com/Gabriel-Jeronimo/eth-keygen-api/src/internal/keypair"
+	"github.com/Gabriel-Jeronimo/eth-keygen-api/src/internal/lambda"
 	aws "github.com/aws/aws-lambda-go/lambda"
 )
 

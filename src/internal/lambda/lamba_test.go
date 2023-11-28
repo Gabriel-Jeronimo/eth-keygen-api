@@ -4,7 +4,7 @@ import (
 	"context"
 	"testing"
 
-	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/lambda"
+	"github.com/Gabriel-Jeronimo/eth-keygen-api/src/internal/lambda"
 	"github.com/aws/aws-lambda-go/events"
 )
 

@@ -5,7 +5,7 @@ import (
 	"encoding/hex"
 	"testing"
 
-	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/keypair"
+	"github.com/Gabriel-Jeronimo/eth-keygen-api/src/internal/keypair"
 	"github.com/ethereum/go-ethereum/crypto"
 )
 

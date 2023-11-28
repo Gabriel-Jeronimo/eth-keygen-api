@@ -1,2 +1,2 @@
 environment = "dev"
-name        = "sqs-integration"
+name        = "sqs-integrationn"

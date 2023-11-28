@@ -1,5 +1,5 @@
 data "archive_file" "lambda_with_dependencies" {
-  source_dir  = "../src"
+  source_file = "../src/main"
   output_path = "lambda/${var.lambda_name}.zip"
   type        = "zip"
 }
@@ -7,7 +7,7 @@ data "archive_file" "lambda_with_dependencies" {
 
 resource "aws_lambda_function" "lambda_sqs" {
   function_name    = var.lambda_name
-  handler          = "./cmd/api/main"
+  handler          = "main"
   role             = aws_iam_role.lambda_exec_role.arn
   runtime          = "go1.x"
   filename         = data.archive_file.lambda_with_dependencies.output_path
