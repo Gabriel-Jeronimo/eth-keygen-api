@@ -10,7 +10,7 @@ import (
 	"os"
 	"testing"
 
-	"github.com/Gabriel-Jeronimo/eth-keygen-api/internal/eth"
+	"github.com/Gabriel-Jeronimo/eth-keygen-api/src/internal/eth"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/core/types"
 	"github.com/ethereum/go-ethereum/crypto"
