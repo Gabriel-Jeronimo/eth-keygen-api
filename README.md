@@ -22,7 +22,15 @@ cd eth-keygen-api
 make init
 ```
 
-3. Deploy using terraform.
+3. Export your keys.
+
+```bash
+export TF_VAR_INFURA_PROJECT_ID="YOUR VARIABLE HERE" &&
+export TF_VAR_FOUNDING_PRIVATE_KEY="YOUR VARIABLE HERE" &&
+export TF_VAR_FOUDING_ADDRESS="YOUR VARIABLE HERE"
+```
+
+4. Deploy using terraform.
 
 ```bash
 make apply
