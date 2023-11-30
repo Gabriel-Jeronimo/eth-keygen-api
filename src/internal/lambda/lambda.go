@@ -42,12 +42,12 @@ func Handler(ctx context.Context, event events.SQSEvent) (Response, error) {
 
 	for _, record := range event.Records {
 		fmt.Printf("Processing message: %v", record.Body)
+
 		err := json.Unmarshal([]byte(record.Body), &transaction)
 
 		if err != nil {
 			log.Printf("ERROR: Failed unmarshal record body into a struct: %v", err)
 			return Response{}, err
-
 		}
 
 		ethClient, _ := eth.Connect()

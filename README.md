@@ -33,7 +33,7 @@ export TF_VAR_FOUDING_ADDRESS="YOUR VARIABLE HERE"
 4. Deploy using terraform.
 
 ```bash
-make apply
+make deploy
 ```
 
 Your API is now ready for use on AWS

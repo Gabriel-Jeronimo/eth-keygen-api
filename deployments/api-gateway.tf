@@ -6,7 +6,7 @@ resource "aws_api_gateway_rest_api" "apiGateway" {
 resource "aws_api_gateway_resource" "form_score" {
   rest_api_id = aws_api_gateway_rest_api.apiGateway.id
   parent_id   = aws_api_gateway_rest_api.apiGateway.root_resource_id
-  path_part   = "form-score"
+  path_part   = "sign"
 }
 
 resource "aws_api_gateway_request_validator" "validator_query" {
@@ -23,8 +23,7 @@ resource "aws_api_gateway_method" "method_form_score" {
   authorization = "NONE"
 
   request_parameters = {
-    "method.request.path.proxy"        = false
-    "method.request.querystring.unity" = true
+
   }
 
   request_validator_id = aws_api_gateway_request_validator.validator_query.id
@@ -47,20 +46,8 @@ resource "aws_api_gateway_integration" "api" {
   # Request Template for passing Method, Body, QueryParameters and PathParams to SQS messages
   request_templates = {
     "application/json" = <<EOF
-Action=SendMessage&MessageBody={
-  "method": "$context.httpMethod",
-  "body-json" : $input.json('$'),
-  "queryParams": {
-    #foreach($param in $input.params().querystring.keySet())
-    "$param": "$util.escapeJavaScript($input.params().querystring.get($param))" #if($foreach.hasNext),#end
-  #end
-  },
-  "pathParams": {
-    #foreach($param in $input.params().path.keySet())
-    "$param": "$util.escapeJavaScript($input.params().path.get($param))" #if($foreach.hasNext),#end
-    #end
-  }
-}"
+Action=SendMessage&MessageBody=
+$input.body
 EOF
   }
 
