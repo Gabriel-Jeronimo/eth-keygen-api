@@ -4,7 +4,7 @@ clean:
 	rm src/main
 init:
 	terraform -chdir=deployments init
-apply:
+deploy:
 	make build && terraform -chdir=deployments apply -var-file="variables.tfvars"
 destroy:
 	terraform -chdir=deployments destroy -var-file="variables.tfvars"
